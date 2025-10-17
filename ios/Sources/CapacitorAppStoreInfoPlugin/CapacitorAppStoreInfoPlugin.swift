@@ -1,5 +1,6 @@
 import Foundation
 import Capacitor
+import StoreKit
 
 /**
  * Please read the Capacitor iOS Plugin Development Guide
@@ -7,17 +8,19 @@ import Capacitor
  */
 @objc(CapacitorAppStoreInfoPlugin)
 public class CapacitorAppStoreInfoPlugin: CAPPlugin, CAPBridgedPlugin {
+
     public let identifier = "CapacitorAppStoreInfoPlugin"
-    public let jsName = "CapacitorAppStoreInfo"
+    public let jsName = "AppStoreInfo"
     public let pluginMethods: [CAPPluginMethod] = [
-        CAPPluginMethod(name: "echo", returnType: CAPPluginReturnPromise)
+        CAPPluginMethod(name: "getInfo", returnType: CAPPluginReturnPromise)
     ]
+
     private let implementation = CapacitorAppStoreInfo()
 
-    @objc func echo(_ call: CAPPluginCall) {
-        let value = call.getString("value") ?? ""
-        call.resolve([
-            "value": implementation.echo(value)
-        ])
+    @objc func getInfo(_ call: CAPPluginCall) {
+        Task {
+            let info = implementation.getInfo()
+            call.resolve(info)
+        }
     }
 }

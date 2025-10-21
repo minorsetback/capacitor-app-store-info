@@ -28,7 +28,7 @@ getInfo() => Promise<{ isTestFlight: boolean; storeCountry: string; }>
 
 Returns information about the app environment:
 - isTestFlight: true if the app is running in TestFlight
-- storeCountry: the App Store country code (e.g., "US")
+- storeCountry: the App Store country code (e.g., "USA")
 
 **Returns:** <code>Promise&lt;{ isTestFlight: boolean; storeCountry: string; }&gt;</code>
 

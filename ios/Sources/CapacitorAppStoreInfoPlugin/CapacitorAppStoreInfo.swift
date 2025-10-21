@@ -3,20 +3,40 @@ import StoreKit
 
 @objc public class CapacitorAppStoreInfo: NSObject {
 
-    @objc public func getInfo() -> [String: Any] {
+    @objc public func getInfo() async -> [String: Any] {
         var isTestFlight = false
-        var storeCountry: String? = nil
+        var storeCountry = "Unknown"
 
-        if let appTransaction = try? await AppTransaction.shared {
-            isTestFlight = appTransaction.environment == .sandbox
-            storeCountry = appTransaction.storefront.countryCode
+        if #available(iOS 16.0, *) {
+            async let storefront = try? Storefront.current
+            async let transaction = try? AppTransaction.shared
+
+            let store = await storefront
+            if let code = store?.countryCode {
+                storeCountry = code
+            }
+
+            if let result = await transaction {
+                switch result {
+                    case .verified(let t):
+                        isTestFlight = (t.environment == .sandbox)
+                    case .unverified:
+                        isTestFlight = true
+                }
+            } else if let receiptURL = Bundle.main.appStoreReceiptURL {
+                isTestFlight = receiptURL.lastPathComponent == "sandboxReceipt"
+            }
         } else {
-            isTestFlight = true
+            if let receiptURL = Bundle.main.appStoreReceiptURL {
+                isTestFlight = receiptURL.lastPathComponent == "sandboxReceipt"
+            }
         }
 
-        return [
+        let info: [String: Any] = [
             "isTestFlight": isTestFlight,
-            "storeCountry": storeCountry ?? (Locale.current.region?.identifier ?? "Unknown")
+            "storeCountry": storeCountry
         ]
+
+        return info
     }
 }

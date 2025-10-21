@@ -1,6 +1,6 @@
 {
   "name": "capacitor-app-store-info",
-  "version": "0.0.1",
+  "version": "7.0.0",
   "description": "Capacitor AppStore app info",
   "main": "dist/plugin.cjs.js",
   "module": "dist/esm/index.js",
@@ -72,9 +72,6 @@
   "capacitor": {
     "ios": {
       "src": "ios"
-    },
-    "android": {
-      "src": "android"
     }
   }
 }

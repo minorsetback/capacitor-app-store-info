@@ -10,16 +10,16 @@ import StoreKit
 public class CapacitorAppStoreInfoPlugin: CAPPlugin, CAPBridgedPlugin {
 
     public let identifier = "CapacitorAppStoreInfoPlugin"
-    public let jsName = "AppStoreInfo"
+    public let jsName = "CapacitorAppStoreInfo"
     public let pluginMethods: [CAPPluginMethod] = [
         CAPPluginMethod(name: "getInfo", returnType: CAPPluginReturnPromise)
     ]
 
-    private let implementation = CapacitorAppStoreInfo()
+    private let implementation: CapacitorAppStoreInfo = CapacitorAppStoreInfo()
 
     @objc func getInfo(_ call: CAPPluginCall) {
         Task {
-            let info = implementation.getInfo()
+            let info = await implementation.getInfo()
             call.resolve(info)
         }
     }
